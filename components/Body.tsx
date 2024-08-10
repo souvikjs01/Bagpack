@@ -3,11 +3,20 @@ import React, { useEffect, useState } from 'react'
 import Leftpart from './Leftpart'
 import Rightpart from './Rightpart'
 import { initItems, ItemProps } from '@/lib/constrain';
+import Cookies from 'js-cookie';
+import dynamic from 'next/dynamic';
 
-export default function Body() {
+function Body() {
+    // Retrieve items from cookies, or use initial items if cookies are empty
+    const itemsFromCookies = Cookies.get('items') ? JSON.parse(Cookies.get('items') as string) : initItems;
+    const [items, setItems] = useState<ItemProps[]>(itemsFromCookies);
+  
+    // Update cookies whenever items change
+    useEffect(() => {
+      Cookies.set('items', JSON.stringify(items), { expires: 7 }); // Expires in 7 days
+    }, [items]);
 
-  const itemsFromLocalStorage= JSON.parse(localStorage.getItem("items") || '[]')
-  const [items, setItems] = useState<ItemProps[]>(itemsFromLocalStorage || initItems);
+
 
   const handleDeleteItem = (id: number) => {
     const newItems = items.filter(item => item.id !== id);
@@ -46,9 +55,6 @@ export default function Body() {
     setItems(newItems)
   }
 
-  useEffect(() => {
-    localStorage.setItem("items", JSON.stringify(items));
-  }, [items])
 
   return (
     <div className=' flex h-[90%] rounded-b-md'>
@@ -70,3 +76,5 @@ export default function Body() {
     </div>
   )
 }
+
+export default dynamic(() => Promise.resolve(Body), {ssr: false})
