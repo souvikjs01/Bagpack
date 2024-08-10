@@ -6,7 +6,7 @@ export default function EmptyItem() {
       <div className=' flex flex-col w-auto'>
         <h1 className=' text-center font-bold text-lg my-2'>Empty Packing List</h1>
         <p className=' text-sm'>Start by adding some items you </p>
-        <p className=' text-sm'>absolutely don't want to forget.</p>
+        <p className=' text-sm'>absolutely do not want to forget.</p>
       </div>
     </div>
   )
